@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Listings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .search-container label, .search-container input {
+            margin-right: 10px;
+        }
+        .apply-button, .add-button, .submit-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .apply-button:hover, .add-button:hover, .submit-button:hover {
+            background-color: #45a049;
+        }
+        .form-container {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            width: 300px;
+        }
+        .form-container input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Job Listings</h2>
+
+<div class="controls">
+    <div class="search-container">
+        <label for="searchInput">Search: </label>
+        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for jobs...">
+    </div>
+    <button class="add-button" onclick="toggleForm()">Add Data</button>
+</div>
+
+<div class="form-container" id="addDataForm">
+    <h3>Add Job Listing</h3>
+    <label for="jobType">Job Type:</label>
+    <input type="text" id="jobType" placeholder="Enter job type">
+    <label for="work">Work:</label>
+    <input type="text" id="work" placeholder="Enter work description">
+    <label for="contactPerson">Contact Person:</label>
+    <input type="text" id="contactPerson" placeholder="Enter contact person">
+    <label for="location">Location:</label>
+    <input type="text" id="location" placeholder="Enter location">
+    <label for="applyLink">Apply Link:</label>
+    <input type="text" id="applyLink" placeholder="Enter application URL">
+    <button class="submit-button" onclick="addData()">Submit</button>
+</div>
+
+<table id="jobTable">
+    <thead>
+        <tr>
+            <th>Job Type</th>
+            <th>Work</th>
+            <th>Contact Person</th>
+            <th>Location</th>
+            <th>Apply</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Full-Time</td>
+            <td>Software Engineer</td>
+            <td>John Doe</td>
+            <td>New York, USA</td>
+            <td><button class="apply-button" onclick="applyNow('https://example.com/apply1')">Apply Now</button></td>
+        </tr>
+        <tr>
+            <td>Part-Time</td>
+            <td>Graphic Designer</td>
+            <td>Jane Smith</td>
+            <td>Los Angeles, USA</td>
+            <td><button class="apply-button" onclick="applyNow('https://example.com/apply2')">Apply Now</button></td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    function searchTable() {
+        const input = document.getElementById('searchInput').value.toUpperCase();
+        const table = document.getElementById('jobTable');
+        const tr = table.getElementsByTagName('tr');
+
+        for (let i = 1; i < tr.length; i++) {
+            let td = tr[i].getElementsByTagName('td');
+            let isVisible = false;
+            for (let j = 0; j < td.length; j++) {
+                if (td[j] && td[j].textContent.toUpperCase().indexOf(input) > -1) {
+                    isVisible = true;
+                }
+            }
+            tr[i].style.display = isVisible ? "" : "none";
+        }
+    }
+
+    function toggleForm() {
+        const form = document.getElementById('addDataForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function addData() {
+        const jobType = document.getElementById('jobType').value;
+        const work = document.getElementById('work').value;
+        const contactPerson = document.getElementById('contactPerson').value;
+        const location = document.getElementById('location').value;
+        const applyLink = document.getElementById('applyLink').value;
+
+        if (jobType && work && contactPerson && location && applyLink) {
+            const table = document.getElementById('jobTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+
+            newRow.innerHTML = `
+                <td>${jobType}</td>
+                <td>${work}</td>
+                <td>${contactPerson}</td>
+                <td>${location}</td>
+                <td><button class="apply-button" onclick="applyNow('${applyLink}')">Apply Now</button></td>
+            `;
+
+            toggleForm();
+            document.getElementById('jobType').value = '';
+            document.getElementById('work').value = '';
+            document.getElementById('contactPerson').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('applyLink').value = '';
+        } else {
+            alert("Please fill out all fields.");
+        }
+    }
+
+    function applyNow(url) {
+        window.open(url, '_blank');
+    }
+</script>
+
+</body>
+</html>
